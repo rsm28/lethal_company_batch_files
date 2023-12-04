@@ -11,6 +11,14 @@ REM Add more mods here as needed under the following format:
 REM SET MODS[n]=[author]-[name]-[ver]
 REM --------------------------------------------------------------------------------
 
+IF NOT EXIST "%~dp0\Lethal Company.exe" (
+    ECHO Lethal Company.exe not found in current directory.
+    ECHO Run this script from the same folder as Lethal Company.exe.
+    timeout /t 5 >nul
+    pause
+    GOTO :EOF
+)
+
 ECHO Removing existing mod files...
 REM Step -1: Remove all existing mod files if they exist!
 if exist "doorstop_config.ini" del /q "doorstop_config.ini"
@@ -88,4 +96,3 @@ del /q ".\Local_Downloads\Extract\!MOD_NAME!\manifest.json" 2>nul
 del /q ".\Local_Downloads\Extract\!MOD_NAME!\README.md" 2>nul
 
 GOTO :EOF
-
