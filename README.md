@@ -1,5 +1,10 @@
-# Standard Version
-Run from anywhere - does some edge case checking, and some registry checks to try and find Lethal Company installation
+# Guide for Users
 
-# Backup Version
-Run from Lethal Company root folder (where Lethal Company.exe) exists.
+Download RUNME.bat and place it inside your Lethal Company root folder (i.e., next to Lethal Company.exe). Run it, and it will automatically pull the latest modlist and latest mod installer, and run them.
+
+# Guide for Maintainers
+
+Update modlist.txt with this format:
+[author]-[name]-[ver]
+
+This can be found on the mod's relevant page, listed under `Dependency String`.
