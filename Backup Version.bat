@@ -1,6 +1,16 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM --------------------------------------------------------------------------------
+REM Define array of mods to download and their respective versions.
+SET MODS[0]=2018-LC_API-2.0.0
+SET MODS[1]=notnotnotswipez-MoreCompany-1.6.0
+SET MODS[2]=anormaltwig-LateCompany-1.0.4
+SET MODS[3]=x753-Mimics-1.0.0
+REM Add more mods here as needed under the following format:
+REM SET MODS[n]=[author]-[name]-[ver]
+REM --------------------------------------------------------------------------------
+
 ECHO Removing existing mod files...
 REM Step -1: Remove all existing mod files if they exist!
 if exist "doorstop_config.ini" del /q "doorstop_config.ini"
@@ -33,13 +43,6 @@ taskkill /im "Lethal Company.exe" /f
 ECHO Cleaning up Extract directory for plugin extraction...
 REM Step 5: Delete Local_Downloads\Extract for clean plugin extraction
 rmdir /s /q "Local_Downloads\Extract"
-
-:: Define array of mods to download and their respective versions.
-SET MODS[0]=2018-LC_API-2.0.0
-SET MODS[1]=notnotnotswipez-MoreCompany-1.5.1
-SET MODS[2]=anormaltwig-LateCompany-1.0.4
-:: Add more mods here as needed under the following format:
-:: SET MODS[n]=[author]-[name]-[ver]
 
 :: Initialize the counter.
 SET /A MOD_INDEX=0
