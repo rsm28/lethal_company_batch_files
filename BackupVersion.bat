@@ -45,7 +45,7 @@ xcopy ".\Local_Downloads\Extract\BepInExPack" . /E /I /Y /q
 ECHO Launching LC to install BepInEx...
 REM Step 4: Launch and close Lethal Company.exe
 start "" /B "Lethal Company.exe"
-timeout /t 5 >nul
+timeout /t 10 >nul
 taskkill /im "Lethal Company.exe" /f
 
 ECHO Cleaning up Extract directory for plugin extraction...
