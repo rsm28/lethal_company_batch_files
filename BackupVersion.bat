@@ -72,6 +72,9 @@ REM this for loop just moves errant .dlls from shit mod authors into the correct
 FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO (
     move "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
 )
+IF EXIST ".\Local_Downloads\Extract\yippeesound" (
+    move ".\Local_Downloads\Extract\yippeesound" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
+)
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
 xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
