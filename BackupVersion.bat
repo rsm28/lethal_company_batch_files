@@ -75,11 +75,15 @@ FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO (
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
 xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
+REM because i know not everyone will update their RUNME.bat file
+if exist "!LC_PATH!\RUNME.bat" del "!LC_PATH!\RUNME.bat"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/RUNME.bat' -OutFile '!LC_PATH!\RUNME.bat'}"
+
 ECHO ---
 ECHO ---
 ECHO ---
 ECHO You can run the game now!
-ECHO Take a drink!
+ECHO Take a drink! 
 ECHO ---
 ECHO ---
 ECHO ---
