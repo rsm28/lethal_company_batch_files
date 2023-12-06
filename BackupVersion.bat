@@ -78,7 +78,8 @@ xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 ECHO ---
 ECHO ---
 ECHO ---
-ECHO You can run the game now! Take a drink!
+ECHO You can run the game now!
+ECHO Take a drink!
 ECHO ---
 ECHO ---
 ECHO ---
