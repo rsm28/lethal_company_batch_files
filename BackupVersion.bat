@@ -42,17 +42,15 @@ xcopy ".\Local_Downloads\Extract\BepInExPack" . /E /I /Y /q
 ECHO Launching LC to install BepInEx...
 REM Step 4: Launch and close Lethal Company.exe
 start "" /B "Lethal Company.exe"
-timeout /t 10 >nul
+timeout /t 5 >nul
 taskkill /im "Lethal Company.exe" /f
 
 ECHO Cleaning up Extract directory for plugin extraction...
 REM Step 5: Delete Local_Downloads\Extract for clean plugin extraction
 rmdir /s /q "Local_Downloads\Extract"
 
-:: Initialize the counter.
+REM Main mod loop
 SET /A MOD_INDEX=0
-
-:: Loop through each mod in the array using a dynamic approach.
 :MOD_LOOP
 IF NOT DEFINED MODS[%MOD_INDEX%] GOTO :END_MOD_LOOP
 SET CURRENT_MOD=!MODS[%MOD_INDEX%]!
@@ -61,15 +59,34 @@ SET /A MOD_INDEX+=1
 GOTO :MOD_LOOP
 :END_MOD_LOOP
 
+ECHO ---
 
-ECHO Moving .dll files from extracted plugins to final destination...
-FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO xcopy "%%G" ".\BepInEx\plugins\" /Y /Q
+ECHO Cleaning up unnecessary files from Extract folder after extraction...
+if exist ".\Local_Downloads\Extract\icon.png" del /q ".\Local_Downloads\Extract\icon.png" 2>nul
+if exist ".\Local_Downloads\Extract\manifest.json" del /q ".\Local_Downloads\Extract\manifest.json" 2>nul
+del /q ".\Local_Downloads\Extract\*.md" 2>nul
+del /q ".\Local_Downloads\Extract\*.zip" 2>nul
 
+ECHO Moving contents from .\Local_Downloads\Extract\BepInEx to .\BepInEx...
+REM this for loop just moves errant .dlls from shit mod authors into the correct folder
+FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO (
+    move "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
+)
+REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
+xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
+
+ECHO ---
+ECHO ---
+ECHO ---
+ECHO You can run the game now! Take a drink!
+ECHO ---
+ECHO ---
+ECHO ---
 pause
 GOTO :EOF
 
 
-:: Function for downloading a mod, extracting it, cleaning up files, and moving plugins.
+:::::::::::::::::::::::::::::::
 :DOWNLOAD_AND_PROCESS_MOD
 SET MOD_INFO=%1
 FOR /F "tokens=1-3 delims=-" %%A IN ("%MOD_INFO%") DO (
@@ -85,11 +102,6 @@ ECHO !WEBREQUEST_URL!
 powershell.exe -Command "& {Invoke-WebRequest -Uri '!WEBREQUEST_URL!' -OutFile '.\Local_Downloads\!MOD_NAME!_!VERSION!.zip'}"
 
 ECHO Extracting !MOD_NAME! version !VERSION!...
-powershell.exe -Command "& {Expand-Archive -Path '.\Local_Downloads\%MOD_NAME%_%VERSION%.zip' -DestinationPath '.\Local_Downloads\Extract' -Force}"
-
-ECHO Cleaning up unnecessary files from !MOD_NAME!'s folder after extraction...
-del /q ".\Local_Downloads\Extract\!MOD_NAME!\icon.png" 2>nul
-del /q ".\Local_Downloads\Extract\!MOD_NAME!\manifest.json" 2>nul
-del /q ".\Local_Downloads\Extract\!MOD_NAME!\README.md" 2>nul
-
+powershell.exe -Command "& {Expand-Archive -Path '.\Local_Downloads\!MOD_NAME!_!VERSION!.zip' -DestinationPath '.\Local_Downloads\Extract' -Force}"
 GOTO :EOF
+:::::::::::::::::::::::::::::::
