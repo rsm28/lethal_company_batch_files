@@ -1,5 +1,3 @@
-
-
 @echo off
 setlocal enabledelayedexpansion
 REM 1. see whether 'Lethal Company.exe' exists in the current directory
@@ -43,12 +41,53 @@ IF EXIST "%~dp0\Lethal Company.exe" (
 )
 
 ECHO Lethal Company installation found at !LC_PATH!.
+ECHO Removing modlist.txt and backup_version.bat
+if exist "!LC_PATH!\modlist.txt" del "!LC_PATH!\modlist.txt"
+if exist "!LC_PATH!\backup_version.bat" del "!LC_PATH!\backup_version.bat"
 
-REM Pull latest modlist.txt and backup version.bat
-ECHO Downloading latest modlist.txt and backup version.bat...
+REM Pull latest modlist.txt and backup_version.bat
+ECHO Downloading latest modlist.txt and backup_version.bat...
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '!LC_PATH!\modlist.txt'}"
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/BackupVersion.bat' -OutFile '!LC_PATH!\backup_version.bat'}"
 
+REM Read the mods from the mods.txt file.
+ECHO ---
+SET /A MOD_INDEX=0
+FOR /F "tokens=*" %%A IN (modlist.txt) DO (
+    SET "MODS[!MOD_INDEX!]=%%A"
+    SET /A MOD_INDEX+=1
+)
+
+REM Go through each mod and...
+FOR /L %%I IN (0,1,!MOD_INDEX!-1) DO (
+    SET "MOD_INFO=!MODS[%%I]!"
+    FOR /F "tokens=1,2 delims=-" %%A IN ("!MOD_INFO!") DO (
+        SET "AUTHOR=%%A"
+        SET "MODNAME=%%B"
+        REM Call the API and parse the JSON respons.
+        FOR /F "delims=" %%V IN ('powershell -Command "$response = Invoke-RestMethod -Uri 'https://thunderstore.io/api/experimental/package/!AUTHOR!/!MODNAME!/'; $response.latest.version_number"') DO (
+            SET "LATEST_VERSION[%%I]=%%V"
+        )
+        ECHO !AUTHOR!-!MODNAME!-!LATEST_VERSION[%%I]! is the latest version.
+    )
+)
+
+REM Update the modlist.txt file with the latest version numbers.
+COPY /Y NUL modlist.tmp >nul 2>&1
+FOR /L %%I IN (0,1,!MOD_INDEX!-1) DO (
+    SET "MOD_INFO=!MODS[%%I]!"
+    FOR /F "tokens=1,2 delims=-" %%A IN ("!MOD_INFO!") DO (
+        SET "AUTHOR=%%A"
+        SET "MODNAME=%%B"
+        ECHO !AUTHOR!-!MODNAME!-!LATEST_VERSION[%%I]!>> modlist.tmp
+    )
+)
+MOVE /Y modlist.tmp modlist.txt >nul 2>&1
+
+ECHO Modlist updated with the latest version numbers.
+ECHO ---
+ECHO Running installer...
+
 REM Run backup version.bat
-ECHO Running backup version.bat...
-call "!LC_PATH!\backup_version.bat"
+ECHO Running backup_version.bat...
+call "!LC_PATH!\bv2.bat"
