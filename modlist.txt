@@ -2,3 +2,4 @@
 notnotnotswipez-MoreCompany-1.5.1
 anormaltwig-LateCompany-1.0.4
 x753-Mimics-1.0.0
+EliteMasterEric-Coroner-1.1.0
