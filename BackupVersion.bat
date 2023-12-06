@@ -1,15 +1,12 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM --------------------------------------------------------------------------------
-REM Define array of mods to download and their respective versions.
-SET MODS[0]=2018-LC_API-2.0.0
-SET MODS[1]=notnotnotswipez-MoreCompany-1.6.0
-SET MODS[2]=anormaltwig-LateCompany-1.0.4
-SET MODS[3]=x753-Mimics-1.0.0
-REM Add more mods here as needed under the following format:
-REM SET MODS[n]=[author]-[name]-[ver]
-REM --------------------------------------------------------------------------------
+REM Read mods from modlist.txt
+SET /A MOD_INDEX=0
+FOR /F "tokens=*" %%A IN (modlist.txt) DO (
+    SET "MODS[!MOD_INDEX!]=%%A"
+    SET /A MOD_INDEX+=1
+)
 
 IF NOT EXIST "%~dp0\Lethal Company.exe" (
     ECHO Lethal Company.exe not found in current directory.
