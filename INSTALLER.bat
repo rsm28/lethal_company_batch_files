@@ -1,6 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM VER 1.0.0
+
 REM Read mods from modlist.txt
 SET /A MOD_INDEX=0
 FOR /F "tokens=*" %%A IN (modlist.txt) DO (
