@@ -6,6 +6,8 @@ REM 3. after we verify we're in the right directory:
     REM 3.1. pull latest: modlist.txt, backup version.bat to the current directory
     REM 3.2. run backup version.bat
 
+REM VER 1.0.0
+
 REM Check if 'Lethal Company.exe' exists in the current directory.
 IF EXIST "%~dp0\Lethal Company.exe" (
     SET "LC_PATH=%~dp0"
@@ -41,14 +43,14 @@ IF EXIST "%~dp0\Lethal Company.exe" (
 )
 
 ECHO Lethal Company installation found at !LC_PATH!.
-ECHO Removing modlist.txt and backup_version.bat
+ECHO Removing modlist.txt and INSTALLER.bat
 if exist "!LC_PATH!\modlist.txt" del "!LC_PATH!\modlist.txt"
-if exist "!LC_PATH!\backup_version.bat" del "!LC_PATH!\backup_version.bat"
+if exist "!LC_PATH!\INSTALLER.bat" del "!LC_PATH!\INSTALLER.bat"
 
-REM Pull latest modlist.txt and backup_version.bat
-ECHO Downloading latest modlist.txt and backup_version.bat...
+REM Pull latest modlist.txt and INSTALLER.bat
+ECHO Downloading latest modlist.txt and INSTALLER.bat...
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '!LC_PATH!\modlist.txt'}"
-powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/BackupVersion.bat' -OutFile '!LC_PATH!\backup_version.bat'}"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/BackupVersion.bat' -OutFile '!LC_PATH!\INSTALLER.bat'}"
 
 REM Read the mods from the mods.txt file.
 ECHO ---
@@ -89,5 +91,5 @@ ECHO ---
 ECHO Running installer...
 
 REM Run backup version.bat
-ECHO Running backup_version.bat...
-call "!LC_PATH!\backup_version.bat"
+ECHO Running INSTALLER.bat...
+call "!LC_PATH!\INSTALLER.bat"
