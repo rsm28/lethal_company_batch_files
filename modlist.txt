@@ -9,3 +9,4 @@ xCeezy-LethalEscape-0.7.4
 Evaisa-LethalThings-0.5.4
 FlipMods-HotbarPlus-1.3.0
 Evaisa-HookGenPatcher-0.0.5
+Evaisa-LethalLib-0.5.2
