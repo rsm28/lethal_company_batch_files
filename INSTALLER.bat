@@ -1,8 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM VER 1.0.0
-
 REM Read mods from modlist.txt
 SET /A MOD_INDEX=0
 FOR /F "tokens=*" %%A IN (modlist.txt) DO (
@@ -44,7 +42,7 @@ xcopy ".\Local_Downloads\Extract\BepInExPack" . /E /I /Y /q
 ECHO Launching LC to install BepInEx...
 REM Step 4: Launch and close Lethal Company.exe
 start "" /B "Lethal Company.exe"
-timeout /t 10 >nul
+timeout /t 5 >nul
 taskkill /im "Lethal Company.exe" /f
 
 ECHO Cleaning up Extract directory for plugin extraction...
@@ -75,6 +73,7 @@ FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO (
     move "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
 )
 move ".\Local_Downloads\Extract\yippeesound" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
+move ".\Local_Downloads\Extract\lethalthings" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
 
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
 xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
