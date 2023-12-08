@@ -7,3 +7,4 @@ sunnobunno-YippeeMod-1.2.1
 RugbugRedfern-Skinwalkers-1.0.7
 xCeezy-LethalEscape-0.7.4
 Evaisa-LethalThings-0.5.4
+FlipMods-HotbarPlus-1.3.0
