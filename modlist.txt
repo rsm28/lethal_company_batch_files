@@ -5,5 +5,4 @@ x753-Mimics-1.0.0
 EliteMasterEric-Coroner-1.1.0
 sunnobunno-YippeeMod-1.2.1
 RugbugRedfern-Skinwalkers-1.0.7
-xCeezy-LethalEscape-0.7.4
 FlipMods-HotbarPlus-1.3.0
