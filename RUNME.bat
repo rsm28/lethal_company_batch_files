@@ -50,7 +50,7 @@ if exist "!LC_PATH!\INSTALLER.bat" del "!LC_PATH!\INSTALLER.bat"
 REM Pull latest modlist.txt and INSTALLER.bat
 ECHO Downloading latest modlist.txt and INSTALLER.bat...
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '!LC_PATH!\modlist.txt'}"
-powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/BackupVersion.bat' -OutFile '!LC_PATH!\INSTALLER.bat'}"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/INSTALLER.bat' -OutFile '!LC_PATH!\INSTALLER.bat'}"
 
 REM Read the mods from the mods.txt file.
 ECHO ---
