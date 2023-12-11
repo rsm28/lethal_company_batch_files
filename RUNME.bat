@@ -38,19 +38,22 @@ IF EXIST "%~dp0\Lethal Company.exe" (
        ECHO Lethal Company installation not found. Exiting...
        timeout /t 5 >nul
        pause
-       GOTO :EOF
+       exit
    )
 )
 
+REM Switch working directory to the Lethal Company installation folder
+cd /D "!LC_PATH!"
+
 ECHO Lethal Company installation found at !LC_PATH!.
 ECHO Removing modlist.txt and INSTALLER.bat
-if exist "!LC_PATH!\modlist.txt" del "!LC_PATH!\modlist.txt"
-if exist "!LC_PATH!\INSTALLER.bat" del "!LC_PATH!\INSTALLER.bat"
+if exist "modlist.txt" del "modlist.txt"
+if exist "INSTALLER.bat" del "INSTALLER.bat"
 
 REM Pull latest modlist.txt and INSTALLER.bat
 ECHO Downloading latest modlist.txt and INSTALLER.bat...
-powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '!LC_PATH!\modlist.txt'}"
-powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/INSTALLER.bat' -OutFile '!LC_PATH!\INSTALLER.bat'}"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '.\modlist.txt'}"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/INSTALLER.bat' -OutFile '.\INSTALLER.bat'}"
 
 REM Read the mods from the mods.txt file.
 ECHO ---
@@ -91,5 +94,8 @@ ECHO ---
 ECHO Running installer...
 
 REM Run backup version.bat
+REM Run the installer in a separate terminal so this RUNME closes and can be updated safely from INSTALLER
 ECHO Running INSTALLER.bat...
-call "!LC_PATH!\INSTALLER.bat"
+start "Lethal Company Mod Installer" /D "!LC_PATH!" "INSTALLER.bat" %~f0
+timeout /t 3 >nul
+exit
