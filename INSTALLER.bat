@@ -1,6 +1,12 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Pull the original RUNME filepath from the parameters (all parameters to handle spaces)
+set ORIG_RUNME=%*
+IF EXIST "!ORIG_RUNME!" (
+   set /A ORIG_RUNME_EXISTS=1
+)
+
 REM Read mods from modlist.txt
 SET /A MOD_INDEX=0
 FOR /F "tokens=*" %%A IN (modlist.txt) DO (
@@ -8,12 +14,12 @@ FOR /F "tokens=*" %%A IN (modlist.txt) DO (
     SET /A MOD_INDEX+=1
 )
 
-IF NOT EXIST "%~dp0\Lethal Company.exe" (
+IF NOT EXIST "Lethal Company.exe" (
     ECHO Lethal Company.exe not found in current directory.
     ECHO Run this script from the same folder as Lethal Company.exe.
     timeout /t 5 >nul
     pause
-    GOTO :EOF
+    exit
 )
 
 ECHO Removing existing mod files...
@@ -82,8 +88,20 @@ REM instead of moving .dlls, we now just merge the two folders - now we can use 
 xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
 REM because i know not everyone will update their RUNME.bat file
-if exist "!LC_PATH!\RUNME.bat" del "!LC_PATH!\RUNME.bat"
-powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/RUNME.bat' -OutFile '!LC_PATH!\RUNME.bat'}"
+if exist "RUNME.bat" del "RUNME.bat"
+
+REM Handle edge case where user ran the RUNME from inside the Lethal Company install folder
+IF NOT EXIST "!ORIG_RUNME!" (
+   SET /A ORIG_RUNME_EXISTS=0
+)
+
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/RUNME.bat' -OutFile '.\RUNME.bat'}"
+
+REM Copy updated RUNME to original location to keep it updated
+IF "!ORIG_RUNME_EXISTS!"=="1" (
+   echo Copying updated RUNME to original location: !ORIG_RUNME!
+   COPY /Y "RUNME.bat" "!ORIG_RUNME!" >nul 2>&1
+)
 
 ECHO ---
 ECHO ---
@@ -94,7 +112,7 @@ ECHO ---
 ECHO ---
 ECHO ---
 pause
-GOTO :EOF
+exit
 
 
 :::::::::::::::::::::::::::::::
