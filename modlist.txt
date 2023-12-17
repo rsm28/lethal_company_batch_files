@@ -1,6 +1,5 @@
 2018-LC_API-2.0.0
 notnotnotswipez-MoreCompany-1.5.1
-alexsio-gamba_mod-1.0.8
 anormaltwig-LateCompany-1.0.6
 Sligili-More_Emotes-1.2.2
 KoderTeh-Boombox_Controller-1.1.0
