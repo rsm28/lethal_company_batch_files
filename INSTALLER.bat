@@ -87,6 +87,14 @@ FOR /R ".\Local_Downloads\Extract\" %%G IN (*) DO (
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
 xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
+REM download custom config files from github repo, extract them, and copy them to BepInEx config directory
+ECHO Downloading and applying custom config files...
+mkdir Local_Downloads\config-temp
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://github.com/rsm28/lethal_company_batch_files/archive/refs/heads/main.zip' -OutFile '.\Local_Downloads\config-temp\main.zip'}"
+powershell.exe -Command "& {Expand-Archive -Path '.\Local_Downloads\config-temp\main.zip' -DestinationPath '.\Local_Downloads\config-temp'}"
+xcopy ".\Local_Downloads\config-temp\lethal_company_batch_files-main\config\*" ".\BepInEx\config" /E /Y /Q >nul 2>&1
+rmdir /s /q "Local_Downloads\config-temp"
+
 REM because i know not everyone will update their RUNME.bat file
 if exist "RUNME.bat" del "RUNME.bat"
 
