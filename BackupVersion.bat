@@ -80,6 +80,7 @@ xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 REM because i know not everyone will update their RUNME.bat file
 if exist "!LC_PATH!\RUNME.bat" del "!LC_PATH!\RUNME.bat"
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/RUNME.bat' -OutFile '!LC_PATH!\RUNME.bat'}"
+powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/INSTALLER.bat' -OutFile '!LC_PATH!\INSTALLER.bat'}"
 
 ECHO ---
 ECHO ---
