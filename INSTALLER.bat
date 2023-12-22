@@ -135,6 +135,9 @@ FOR /F "tokens=1-3 delims=-" %%A IN ("%MOD_INFO%") DO (
 ECHO ---
 ECHO Downloading !MOD_NAME! version !VERSION! from author !MOD_AUTHOR!...
 SET WEBREQUEST_URL=https://thunderstore.io/package/download/!MOD_AUTHOR!/!MOD_NAME!/!VERSION!/
+IF !MOD_NAME! == "LC_API" (
+    SET WEBREQUEST_URL=https://thunderstore.io/package/download/!MOD_AUTHOR!/!MOD_NAME!/2.2.0/
+)
 ECHO !WEBREQUEST_URL!
 powershell.exe -Command "& {Invoke-WebRequest -Uri '!WEBREQUEST_URL!' -OutFile '.\Local_Downloads\!MOD_NAME!_!VERSION!.zip'}"
 
