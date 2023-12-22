@@ -50,6 +50,17 @@ ECHO Removing modlist.txt and INSTALLER.bat
 if exist "modlist.txt" del "modlist.txt"
 if exist "INSTALLER.bat" del "INSTALLER.bat"
 
+REM Pull list of modpacks from GitHub
+REM ECHO Fetching list of modpacks...
+REM powershell.exe -Command "& {$user='rsm28'; $repo='lethal_company_batch_files'; $response = Invoke-RestMethod -Uri \"https://api.github.com/repos/$user/$repo/contents/modpacks\"; $modpacks = $response | ForEach-Object { $_.name }; $modpacks}"
+
+REM ECHO Please enter the name of the modpack you want to install:
+REM SET /P MODPACK=
+
+REM REM Download the selected modpack
+REM ECHO Downloading %MODPACK%...
+REM powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modpacks/%MODPACK%' -OutFile '.\modlist.txt'}"
+
 REM Pull latest modlist.txt and INSTALLER.bat
 ECHO Downloading latest modlist.txt and INSTALLER.bat...
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/rsm28/lethal_company_batch_files/main/modlist.txt' -OutFile '.\modlist.txt'}"
