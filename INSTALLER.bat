@@ -1,15 +1,25 @@
 @echo off
-setlocal enabledelayedexpansion
+SETLOCAL EnableDelayedExpansion
+
+REM version 1.1.0
+REM shoot me there was no 1.0.0
 
 REM Pull the original RUNME filepath from the parameters (all parameters to handle spaces)
-set ORIG_RUNME=%*
+SET ORIG_RUNME=%*
 IF EXIST "!ORIG_RUNME!" (
-   set /A ORIG_RUNME_EXISTS=1
+   SET /A ORIG_RUNME_EXISTS=1
 )
 
-REM Read mods from modlist.txt
+REM HOLY FUCK WHY IS %2 "COMPANY.EXE/RUNME.BAT"
+REM WHY DOES THIS EAT THE NEXT VARIABLE
+REM ?????????
+ECHO The selected modpack is: %3
+
+REM Read mods from passed modpack variable
+SET "MODPACK=%~3"
 SET /A MOD_INDEX=0
-FOR /F "tokens=*" %%A IN (modlist.txt) DO (
+
+FOR /F "tokens=*" %%A IN (.\modpacks\!MODPACK!.txt) DO (
     SET "MODS[!MOD_INDEX!]=%%A"
     SET /A MOD_INDEX+=1
 )
@@ -17,21 +27,21 @@ FOR /F "tokens=*" %%A IN (modlist.txt) DO (
 IF NOT EXIST "Lethal Company.exe" (
     ECHO Lethal Company.exe not found in current directory.
     ECHO Run this script from the same folder as Lethal Company.exe.
-    timeout /t 5 >nul
-    pause
-    exit
+    TIMEOUT /t 5 >nul
+    PAUSE
+    EXIT
 )
 
 ECHO Removing existing mod files...
 REM Step -1: Remove all existing mod files if they exist!
-if exist "doorstop_config.ini" del /q "doorstop_config.ini"
-if exist "winhttp.dll" del /q "winhttp.dll"
-if exist "BepInEx\" rmdir /s /q "BepInEx"
-if exist "Local_Downloads\" rmdir /s /q "Local_Downloads"
+IF EXIST "doorstop_config.ini" DEL /q "doorstop_config.ini"
+IF EXIST "winhttp.dll" DEL /q "winhttp.dll"
+IF EXIST "BepInEx\" RMDIR /s /q "BepInEx"
+IF EXIST "Local_Downloads\" RMDIR /s /q "Local_Downloads"
 
 ECHO Creating Local_Downloads directory...
 REM Step 0: Create a directory called "Local_Downloads"
-mkdir Local_Downloads
+MKDIR Local_Downloads
 
 ECHO Downloading BepInExPack...
 REM Step 1: Download BepInExPack and extract it
@@ -43,17 +53,17 @@ powershell.exe -Command "& {Expand-Archive -Path '.\Local_Downloads\BepInExPack_
 
 ECHO Moving BepInEx contents to root folder...
 REM Step 3: Move contents of BepInExPack to root folder
-xcopy ".\Local_Downloads\Extract\BepInExPack" . /E /I /Y /q
+XCOPY ".\Local_Downloads\Extract\BepInExPack" . /E /I /Y /q
 
 ECHO Launching LC to install BepInEx...
 REM Step 4: Launch and close Lethal Company.exe
-start "" /B "Lethal Company.exe"
-timeout /t 5 >nul
-taskkill /im "Lethal Company.exe" /f
+START "" /B "Lethal Company.exe"
+TIMEOUT /t 5 >nul
+TASKKILL /im "Lethal Company.exe" /f
 
 ECHO Cleaning up Extract directory for plugin extraction...
 REM Step 5: Delete Local_Downloads\Extract for clean plugin extraction
-rmdir /s /q "Local_Downloads\Extract"
+RMDIR /s /q "Local_Downloads\Extract"
 
 REM Main mod loop
 SET /A MOD_INDEX=0
@@ -68,35 +78,35 @@ GOTO :MOD_LOOP
 ECHO ---
 
 ECHO Cleaning up unnecessary files from Extract folder after extraction...
-if exist ".\Local_Downloads\Extract\icon.png" del /q ".\Local_Downloads\Extract\icon.png" 2>nul
-if exist ".\Local_Downloads\Extract\manifest.json" del /q ".\Local_Downloads\Extract\manifest.json" 2>nul
-del /q ".\Local_Downloads\Extract\*.md" 2>nul
-del /q ".\Local_Downloads\Extract\*.zip" 2>nul
+IF EXIST ".\Local_Downloads\Extract\icon.png" DEL /q ".\Local_Downloads\Extract\icon.png" 2>nul
+IF EXIST ".\Local_Downloads\Extract\manifest.json" DEL /q ".\Local_Downloads\Extract\manifest.json" 2>nul
+DEL /q ".\Local_Downloads\Extract\*.md" 2>nul
+DEL /q ".\Local_Downloads\Extract\*.zip" 2>nul
 
 ECHO Moving contents from .\Local_Downloads\Extract\BepInEx to .\BepInEx...
 REM this for loop just moves errant files from shit mod authors into the correct folder
 FOR /R ".\Local_Downloads\Extract\" %%G IN (*.dll) DO (
-    move "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
+    MOVE "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
 )
 FOR /R ".\Local_Downloads\Extract\" %%G IN (*) DO (
     IF "%%~xG"=="" (
-        move /Y "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
+        MOVE /Y "%%G" ".\Local_Downloads\Extract\BepInEx\plugins\" >nul 2>&1
     )
 )
 
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
-xcopy ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
+XCOPY ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
 REM download custom config files from github repo, extract them, and copy them to BepInEx config directory
 ECHO Downloading and applying custom config files...
-mkdir Local_Downloads\config-temp
+MKDIR Local_Downloads\config-temp
 powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://github.com/rsm28/lethal_company_batch_files/archive/refs/heads/main.zip' -OutFile '.\Local_Downloads\config-temp\main.zip'}"
 powershell.exe -Command "& {Expand-Archive -Path '.\Local_Downloads\config-temp\main.zip' -DestinationPath '.\Local_Downloads\config-temp'}"
-xcopy ".\Local_Downloads\config-temp\lethal_company_batch_files-main\config\*" ".\BepInEx\config" /E /Y /Q >nul 2>&1
-rmdir /s /q "Local_Downloads\config-temp"
+XCOPY ".\Local_Downloads\config-temp\lethal_company_batch_files-main\config\*" ".\BepInEx\config" /E /Y /Q >nul 2>&1
+RMDIR /s /q "Local_Downloads\config-temp"
 
 REM because i know not everyone will update their RUNME.bat file
-if exist "RUNME.bat" del "RUNME.bat"
+IF EXIST "RUNME.bat" DEL "RUNME.bat"
 
 REM Handle edge case where user ran the RUNME from inside the Lethal Company install folder
 IF NOT EXIST "!ORIG_RUNME!" (
@@ -107,7 +117,7 @@ powershell.exe -Command "& {Invoke-WebRequest -Uri 'https://raw.githubuserconten
 
 REM Copy updated RUNME to original location to keep it updated
 IF "!ORIG_RUNME_EXISTS!"=="1" (
-   echo Copying updated RUNME to original location: !ORIG_RUNME!
+   ECHO Copying updated RUNME to original location: !ORIG_RUNME!
    COPY /Y "RUNME.bat" "!ORIG_RUNME!" >nul 2>&1
 )
 
@@ -119,8 +129,8 @@ ECHO Take a drink!
 ECHO ---
 ECHO ---
 ECHO ---
-pause
-exit
+PAUSE
+EXIT
 
 
 :::::::::::::::::::::::::::::::
