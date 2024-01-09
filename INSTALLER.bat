@@ -97,6 +97,15 @@ FOR /R ".\Local_Downloads\Extract\" %%G IN (*) DO (
 REM instead of moving .dlls, we now just merge the two folders - now we can use mods that have additional files (like cosmetic suit mods or whatever)
 XCOPY ".\Local_Downloads\Extract\BepInEx\*" ".\BepInEx\" /E /Y /Q >nul 2>&1
 
+REM this is a shitty fix for the MoreEmotes mod files issue
+if exist ".\BepInEx\plugins\MoreEmotes\" (
+    if exist ".\BepInEx\plugins\animationsbundle" move /Y ".\BepInEx\plugins\animationsbundle" ".\BepInEx\plugins\MoreEmotes\"
+    if exist ".\BepInEx\plugins\animatorbundle" move /Y ".\BepInEx\plugins\animatorbundle" ".\BepInEx\plugins\MoreEmotes\"
+)
+
+REM this is a shitty fix for the Coroner mod files issue
+if exist ".\Local_Downloads\Extract\Strings_en.xml" move /Y ".\Local_Downloads\Extract\Strings_en.xml" ".\BepInEx\plugins\" 
+
 REM download custom config files from github repo, extract them, and copy them to BepInEx config directory
 ECHO Downloading and applying custom config files...
 MKDIR Local_Downloads\config-temp
